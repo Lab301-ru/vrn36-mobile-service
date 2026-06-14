@@ -1,0 +1,34 @@
+<svg width="360" height="80" viewBox="0 0 360 80" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="VRN-36 Mobile Service">
+  <defs>
+    <linearGradient id="lkEdge" x1="40" y1="14" x2="40" y2="66" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#67E8F9" stop-opacity="0.55"/>
+      <stop offset="0.5" stop-color="#22D3EE" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#3B82F6" stop-opacity="0.45"/>
+    </linearGradient>
+    <linearGradient id="lkVector" x1="30" y1="28" x2="50" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A5F3FC"/>
+      <stop offset="0.55" stop-color="#22D3EE"/>
+      <stop offset="1" stop-color="#3B82F6"/>
+    </linearGradient>
+    <radialGradient id="lkGlow" cx="0.5" cy="0.46" r="0.5">
+      <stop offset="0" stop-color="#22D3EE" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#22D3EE" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- mark -->
+  <g transform="translate(8,8)">
+    <circle cx="32" cy="30" r="18" fill="url(#lkGlow)"/>
+    <path d="M32 6 51.05 17 51.05 39 32 50 12.95 39 12.95 17Z" fill="#0B0F17" stroke="url(#lkEdge)" stroke-width="1.5"/>
+    <path d="M32 12 45.86 20 45.86 36 32 44 18.14 36 18.14 20Z" fill="none" stroke="#243047" stroke-width="1"/>
+    <path d="M23 23 L32 39 L41 23" fill="none" stroke="url(#lkVector)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="32" cy="39" r="2.3" fill="#A5F3FC"/>
+  </g>
+
+  <!-- wordmark -->
+  <g font-family="'JetBrains Mono','Geist Mono',ui-monospace,monospace">
+    <text x="76" y="40" font-size="25" font-weight="700" letter-spacing="0.5" fill="#E6EAF2">VRN</text>
+    <text x="135" y="40" font-size="25" font-weight="700" letter-spacing="0.5" fill="#22D3EE">·36</text>
+    <text x="77" y="58" font-size="9.5" font-weight="500" letter-spacing="6" fill="#8B97AB">MOBILE SERVICE</text>
+  </g>
+</svg>
