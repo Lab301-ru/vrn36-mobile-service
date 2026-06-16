@@ -22,16 +22,42 @@ const reasons = [
 
 const process = ["Заявка", "Диагностика", "Согласование", "Ремонт", "Выдача"];
 
-const repairs = [
-  { device: "iPhone 13 Pro", work: "Замена дисплейного модуля", before: "сколы и зеленая полоса", after: "True Tone, Face ID, герметизация" },
-  { device: "MacBook Air M1", work: "Чистка после жидкости", before: "не включался", after: "запуск, тест питания, профилактика" },
-  { device: "Samsung Tab S8", work: "Восстановление разъема USB-C", before: "зарядка под углом", after: "стабильное питание 25W" },
+type Repair = {
+  device: string;
+  work: string;
+  before: string;
+  after: string;
+  images?: { before: string; after: string; aspect: string };
+};
+
+const repairs: Repair[] = [
+  {
+    device: "iPhone 13 Pro",
+    work: "Замена дисплейного модуля",
+    before: "сколы и зеленая полоса",
+    after: "True Tone, Face ID, герметизация",
+    images: { before: "/repair-iphone13-before.avif", after: "/repair-iphone13-after.avif", aspect: "941 / 1672" },
+  },
+  {
+    device: "MacBook Air M1",
+    work: "Чистка после жидкости",
+    before: "не включался",
+    after: "запуск, тест питания, профилактика",
+    images: { before: "/repair-macbook-before.avif", after: "/repair-macbook-after.avif", aspect: "941 / 1672" },
+  },
+  {
+    device: "Samsung Tab S8",
+    work: "Восстановление разъема USB-C",
+    before: "зарядка под углом",
+    after: "стабильное питание 25W",
+    images: { before: "/repair-samsung-before.avif", after: "/repair-samsung-after.avif", aspect: "941 / 1672" },
+  },
 ];
 
 const reviews = [
   { name: "Анна", text: "Понравилось, что сначала объяснили причину поломки и цену. Телефон забрала в тот же день.", rating: "5.0" },
   { name: "Илья", text: "Ноутбук сильно грелся и выключался. После чистки и замены термопасты работает тихо.", rating: "5.0" },
-  { name: "Марина", text: "Мастер приехал домой, проверил телевизор и честно сказал, что ремонт выгоден. Спасибо за подход.", rating: "4.9" },
+  { name: "Марина", text: "Мастер приехал домой, проверил телевизор и честно сказал, что ремонт выгоден. Спасибо за подход.", rating: "5.0" },
 ];
 
 const faqs = [
@@ -78,14 +104,13 @@ function DeviceStack() {
       <div className="device-glow" />
       <div className="device-card device-card-phone">
         <div className="device-screen">
+          <img className="device-screen-img" src="/hero-repair.avif" alt="" loading="lazy" />
           <span className="device-pill" />
-          <div className="device-grid" />
-          <div className="scan-line" />
         </div>
       </div>
       <div className="device-card device-card-laptop">
         <div className="laptop-top">
-          <div className="laptop-chart" />
+          <img className="laptop-screen-img" src="/hero-laptop.avif" alt="" loading="lazy" />
         </div>
         <div className="laptop-base" />
       </div>
@@ -96,7 +121,21 @@ function DeviceStack() {
   );
 }
 
-function RepairVisual({ index }: { index: number }) {
+function RepairVisual({ index, images }: { index: number; images?: Repair["images"] }) {
+  if (images) {
+    return (
+      <div className="repair-visual repair-visual--photo">
+        <div className="repair-panel repair-panel--photo" style={{ aspectRatio: images.aspect }}>
+          <span>до</span>
+          <img className="repair-photo" src={images.before} alt="" loading="lazy" />
+        </div>
+        <div className="repair-panel repair-panel--photo" style={{ aspectRatio: images.aspect }}>
+          <span>после</span>
+          <img className="repair-photo" src={images.after} alt="" loading="lazy" />
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="repair-visual">
       <div className={`repair-panel repair-before repair-tone-${index}`}>
@@ -201,11 +240,11 @@ export function LandingPage() {
               инженерного опыта
             </div>
             <div className="card p-4">
-              <strong className="block text-xl font-semibold text-white">24 ч</strong>
-              для частых ремонтов
+              <strong className="block text-xl font-semibold text-white">Выезд</strong>
+              по всему Воронежу
             </div>
             <div className="card p-4">
-              <strong className="block text-xl font-semibold text-white">{phone}</strong>
+              <strong className="block whitespace-nowrap text-base font-semibold tracking-tight text-white">{phone}</strong>
               прямая связь с мастером
             </div>
           </div>
@@ -357,7 +396,7 @@ export function LandingPage() {
               className="reveal card card-interactive p-5"
               style={{ transitionDelay: `${index * 80}ms` }}
             >
-              <RepairVisual index={index} />
+              <RepairVisual index={index} images={item.images} />
               <div className="pt-5">
                 <p className="text-sm font-semibold text-[var(--accent)]">{item.device}</p>
                 <h3 className="mt-2 text-lg font-semibold text-white">{item.work}</h3>
@@ -403,10 +442,13 @@ export function LandingPage() {
       </section>
 
       <section className="mx-auto grid max-w-7xl gap-10 px-5 py-24 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8 lg:py-32">
-        <div className="engineer-portrait reveal" aria-label="Профессиональный портрет инженера">
-          <div className="portrait-core">
-            <span />
-          </div>
+        <div className="engineer-portrait reveal">
+          <img
+            className="engineer-portrait-img"
+            src="/master-portrait.avif"
+            alt="Михеев Фёдор Евгеньевич — старший инженер VRN-36 Mobile Service"
+            loading="lazy"
+          />
         </div>
         <div className="reveal self-center" style={{ transitionDelay: "80ms" }}>
           <SectionLabel>О мастере</SectionLabel>

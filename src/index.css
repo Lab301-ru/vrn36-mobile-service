@@ -456,6 +456,23 @@ body {
   border-radius: 1.75rem;
   background: linear-gradient(160deg, #0d172b, #070c15 60%, #0b1422);
 }
+.device-screen-img {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  /* Смещаем кадр вправо — туда, где виден процесс ремонта телефона */
+  object-position: 82% center;
+}
+/* Глянцевый блик поверх экрана для реалистичности */
+.device-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.14), transparent 34%);
+  pointer-events: none;
+}
 .device-pill {
   position: absolute;
   left: 50%;
@@ -496,18 +513,26 @@ body {
   animation: floatLaptop 11s ease-in-out infinite;
 }
 .laptop-top {
+  position: relative;
   height: 100%;
   border-radius: 1rem;
   background: linear-gradient(150deg, #0d172b, #070c15);
   overflow: hidden;
 }
-.laptop-chart {
+.laptop-screen-img {
+  display: block;
   height: 100%;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 40%),
-    repeating-linear-gradient(180deg, transparent 0 2.6rem, rgba(255, 255, 255, 0.05) 2.6rem 2.66rem),
-    linear-gradient(120deg, transparent 38%, rgba(98, 95, 255, 0.22) 38.5%, transparent 39%),
-    linear-gradient(150deg, transparent 60%, rgba(48, 95, 189, 0.24) 60.5%, transparent 61%);
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+/* Глянцевый блик поверх экрана для реалистичности */
+.laptop-top::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.12), transparent 38%);
+  pointer-events: none;
 }
 .laptop-base {
   position: absolute;
@@ -553,6 +578,20 @@ body {
   border-radius: 0.9rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: #0a0f1a;
+}
+.repair-photo {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  background: #0a0f1a;
+}
+/* Панели с реальным фото подгоняются под пропорции снимка (aspect-ratio
+   задаётся инлайн из данных) — изображение заполняет контейнер целиком,
+   чётко, без полей и обрезки. */
+.repair-visual--photo {
+  min-height: 0;
 }
 .repair-panel span {
   position: absolute;
@@ -639,6 +678,14 @@ body {
     linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 42px 42px;
   mask-image: linear-gradient(to bottom, black, transparent 82%);
+}
+.engineer-portrait-img {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center top;
 }
 .portrait-core {
   position: absolute;
