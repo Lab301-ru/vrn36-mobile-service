@@ -35,19 +35,16 @@ export function LogoMark({ className }: MarkProps) {
   );
 }
 
-/** Full horizontal lockup: mark + monospace wordmark. */
+/** Full horizontal lockup: the VRN-36 white wordmark. */
 export function BrandLockup({ className }: MarkProps) {
   return (
-    <span className={`flex items-center gap-3 ${className ?? ""}`}>
-      <LogoMark className="h-9 w-9 shrink-0 drop-shadow-[0_0_18px_rgba(34,211,238,0.35)]" />
-      <span className="flex flex-col leading-none">
-        <span className="font-mono text-[15px] font-bold tracking-tight text-white sm:text-base">
-          VRN<span className="text-cyan-300">·36</span>
-        </span>
-        <span className="mt-1 font-mono text-[9px] font-medium uppercase tracking-[0.42em] text-slate-500">
-          Mobile Service
-        </span>
-      </span>
-    </span>
+    <img
+      src="/vrn36-horizontal-white.png"
+      alt="VRN-36 Mobile Service"
+      width={4287}
+      height={918}
+      draggable={false}
+      className={`h-6 w-auto select-none sm:h-7 ${className ?? ""}`}
+    />
   );
 }

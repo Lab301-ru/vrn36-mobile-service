@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vrn36mobileservice.ru/sitemap.xml

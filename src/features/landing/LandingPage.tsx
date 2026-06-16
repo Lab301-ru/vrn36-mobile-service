@@ -1,11 +1,8 @@
-import { useMemo, useState } from "react";
-import { BrandLockup } from "./BrandLogo";
+import { useEffect, useMemo, useState } from "react";
+import { site } from "@/config/site";
+import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 
-const phone = "+7 980 545 62 45";
-const phoneHref = "tel:+79805456245";
-const telegramHref = "https://t.me/VRN_FEDOR_MIKEEV";
-const whatsappHref = "https://wa.me/79805456245";
-const vkHref = "https://vk.com/profremteh_vrn";
+const { phone, phoneHref, telegramHref, whatsappHref, vkHref } = site;
 
 const services = [
   { title: "Смартфоны", copy: "Дисплеи, батареи, разъемы, камеры, восстановление после влаги.", meta: "от 30 минут" },
@@ -72,12 +69,7 @@ const repairMultipliers: Record<string, number> = {
 };
 
 function SectionLabel({ children }: { children: string }) {
-  return (
-    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-sky-300/20 bg-sky-400/8 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-sky-200">
-      <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_16px_rgba(103,232,249,0.9)]" />
-      {children}
-    </div>
-  );
+  return <div className="eyebrow mb-5">{children}</div>;
 }
 
 function DeviceStack() {
@@ -119,7 +111,33 @@ function RepairVisual({ index }: { index: number }) {
   );
 }
 
+function Chevron({ open }: { open: boolean }) {
+  return (
+    <svg
+      className={`faq-chevron ${open ? "open" : ""} shrink-0 text-[var(--accent)]`}
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M6 9l6 6 6-6" />
+    </svg>
+  );
+}
+
 export function LandingPage() {
+  useDocumentMeta({
+    title: "VRN-36 Mobile Service — премиальный ремонт техники в Воронеже",
+    description:
+      "Ремонт смартфонов, ноутбуков, планшетов, ПК и бытовой электроники в Воронеже. Честная диагностика, аккуратный ремонт, гарантия и выезд мастера.",
+    path: "/",
+  });
+
   const [device, setDevice] = useState("Смартфон");
   const [repair, setRepair] = useState("Экран");
   const [openFaq, setOpenFaq] = useState(0);
@@ -129,55 +147,65 @@ export function LandingPage() {
     return Math.round(value / 100) * 100;
   }, [device, repair]);
 
-  return (
-    <main className="min-h-dvh overflow-hidden bg-[#02050a] text-white">
-      <div className="landing-ambient" />
-      <nav className="fixed inset-x-0 top-0 z-50 border-b border-white/8 bg-black/45 backdrop-blur-2xl">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <a href="#top" aria-label="VRN-36 Mobile Service">
-            <BrandLockup />
-          </a>
-          <div className="hidden items-center gap-6 text-sm text-slate-300 md:flex">
-            <a className="transition hover:text-white" href="#services">Услуги</a>
-            <a className="transition hover:text-white" href="#process">Процесс</a>
-            <a className="transition hover:text-white" href="#works">Работы</a>
-            <a className="transition hover:text-white" href="#contacts">Контакты</a>
-          </div>
-          <a className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-cyan-100" href={phoneHref}>
-            Позвонить
-          </a>
-        </div>
-      </nav>
+  // Reveal-on-scroll: лёгкий IntersectionObserver, без библиотек
+  useEffect(() => {
+    const els = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-visible"));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.12 },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
 
-      <section id="top" className="relative mx-auto grid min-h-[100svh] max-w-7xl items-center gap-12 px-4 pb-16 pt-28 sm:px-6 lg:grid-cols-[1.02fr_0.98fr] lg:px-8">
+  return (
+    <>
+      <section
+        id="top"
+        className="relative mx-auto grid min-h-[100svh] max-w-7xl items-center gap-12 px-5 pb-20 pt-32 sm:px-6 lg:grid-cols-[1.02fr_0.98fr] lg:px-8 lg:pb-28"
+      >
         <div className="relative z-10">
-          <SectionLabel>Ремонт техники в Воронеже</SectionLabel>
-          <h1 className="max-w-4xl text-5xl font-semibold leading-[0.96] tracking-tight text-white sm:text-6xl lg:text-7xl">
+          <div className="reveal">
+            <SectionLabel>Ремонт техники в Воронеже</SectionLabel>
+          </div>
+          <h1 className="reveal display max-w-4xl text-balance text-[2.7rem] font-semibold text-white sm:text-6xl lg:text-[4.5rem]" style={{ transitionDelay: "60ms" }}>
             Премиальный сервис для устройств, которым вы доверяете каждый день.
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
+          <p className="reveal mt-6 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl" style={{ transitionDelay: "120ms" }}>
             Смартфоны, ноутбуки, планшеты, компьютеры и домашняя электроника. Честная диагностика,
             аккуратный ремонт и спокойная гарантия без ощущения обычной мастерской.
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a className="inline-flex h-12 items-center justify-center rounded-lg bg-cyan-300 px-6 text-sm font-bold text-slate-950 shadow-[0_0_44px_rgba(34,211,238,0.35)] transition hover:bg-cyan-200" href={phoneHref}>
+          <div className="reveal mt-9 flex flex-col gap-3 sm:flex-row" style={{ transitionDelay: "180ms" }}>
+            <a className="btn btn-primary btn-lg" href={phoneHref}>
               Позвонить сейчас
             </a>
-            <a className="inline-flex h-12 items-center justify-center rounded-lg border border-white/12 bg-white/7 px-6 text-sm font-semibold text-white backdrop-blur transition hover:border-cyan-200/40 hover:bg-white/10" href="#contacts">
+            <a className="btn btn-secondary btn-lg" href="#contacts">
               Получить консультацию
             </a>
           </div>
-          <div className="mt-8 grid gap-3 text-sm text-slate-400 sm:grid-cols-3">
-            <div className="rounded-lg border border-white/8 bg-white/[0.035] p-4 backdrop-blur">
-              <strong className="block text-xl text-white">12+ лет</strong>
+          <div className="reveal mt-10 grid gap-3 text-sm text-slate-400 sm:grid-cols-3" style={{ transitionDelay: "240ms" }}>
+            <div className="card p-4">
+              <strong className="block text-xl font-semibold text-white">12+ лет</strong>
               инженерного опыта
             </div>
-            <div className="rounded-lg border border-white/8 bg-white/[0.035] p-4 backdrop-blur">
-              <strong className="block text-xl text-white">24 ч</strong>
+            <div className="card p-4">
+              <strong className="block text-xl font-semibold text-white">24 ч</strong>
               для частых ремонтов
             </div>
-            <div className="rounded-lg border border-white/8 bg-white/[0.035] p-4 backdrop-blur">
-              <strong className="block text-xl text-white">{phone}</strong>
+            <div className="card p-4">
+              <strong className="block text-xl font-semibold text-white">{phone}</strong>
               прямая связь с мастером
             </div>
           </div>
@@ -185,39 +213,61 @@ export function LandingPage() {
         <DeviceStack />
       </section>
 
-      <section id="services" className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <SectionLabel>Сервисная матрица</SectionLabel>
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <h2 className="max-w-3xl text-4xl font-semibold tracking-tight text-white sm:text-5xl">Техника получает инженерный подход, а не случайный ремонт.</h2>
-          <a className="inline-flex h-11 w-fit items-center justify-center rounded-lg border border-cyan-200/25 px-5 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-300/10" href="#calculator">
+      <section id="services" className="relative mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8 lg:py-32">
+        <div className="reveal flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div>
+            <SectionLabel>Сервисная матрица</SectionLabel>
+            <h2 className="heading max-w-3xl text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
+              Техника получает инженерный подход, а не случайный ремонт.
+            </h2>
+          </div>
+          <a className="btn btn-secondary btn-md w-fit" href="#calculator">
             Заказать ремонт
           </a>
         </div>
-        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-          {services.map((service) => (
-            <article key={service.title} className="group rounded-lg border border-white/9 bg-[linear-gradient(180deg,rgba(255,255,255,0.075),rgba(255,255,255,0.025))] p-5 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-cyan-200/30 hover:bg-white/[0.08]">
-              <div className="mb-8 h-10 w-10 rounded-lg border border-cyan-300/20 bg-cyan-300/10 shadow-[0_0_30px_rgba(34,211,238,0.12)]" />
-              <h3 className="text-xl font-semibold text-white">{service.title}</h3>
+        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+          {services.map((service, index) => (
+            <article
+              key={service.title}
+              className="reveal card card-interactive p-6"
+              style={{ transitionDelay: `${index * 70}ms` }}
+            >
+              <div className="mb-9 grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/5">
+                <span className="h-2 w-2 rounded-full bg-[var(--accent)]" />
+              </div>
+              <h3 className="text-lg font-semibold text-white">{service.title}</h3>
               <p className="mt-3 text-sm leading-6 text-slate-400">{service.copy}</p>
-              <p className="mt-6 text-xs font-semibold uppercase tracking-[0.16em] text-cyan-200">{service.meta}</p>
+              <div className="mt-6">
+                <span className="tag">{service.meta}</span>
+              </div>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="relative border-y border-white/8 bg-white/[0.025]">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
-          <div>
+      <section className="relative border-y border-white/8 bg-white/[0.015]">
+        <div className="mx-auto grid max-w-7xl gap-12 px-5 py-24 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8 lg:py-32">
+          <div className="reveal">
             <SectionLabel>Почему выбирают нас</SectionLabel>
-            <h2 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">Тихая уверенность вместо громких обещаний.</h2>
-            <p className="mt-5 max-w-xl text-lg leading-8 text-slate-300">
+            <h2 className="heading text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
+              Тихая уверенность вместо громких обещаний.
+            </h2>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
               Клиент видит состояние техники, варианты ремонта, стоимость и сроки до начала работ.
             </p>
           </div>
           <div className="grid gap-3">
             {reasons.map((reason, index) => (
-              <div key={reason} className="flex items-start gap-4 rounded-lg border border-white/9 bg-black/30 p-4 backdrop-blur">
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-cyan-300/10 text-sm font-bold text-cyan-200">{index + 1}</span>
+              <div
+                key={reason}
+                className="reveal card flex items-start gap-4 p-5"
+                style={{ transitionDelay: `${index * 70}ms` }}
+              >
+                <span className="check-badge" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 6 9 17l-5-5" />
+                  </svg>
+                </span>
                 <p className="text-base leading-7 text-slate-200">{reason}</p>
               </div>
             ))}
@@ -225,14 +275,22 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section id="process" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <SectionLabel>Процесс</SectionLabel>
-        <h2 className="max-w-3xl text-4xl font-semibold tracking-tight text-white sm:text-5xl">Пять шагов, которые держат ремонт под контролем.</h2>
-        <div className="mt-10 grid gap-4 md:grid-cols-5">
+      <section id="process" className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8 lg:py-32">
+        <div className="reveal">
+          <SectionLabel>Процесс</SectionLabel>
+          <h2 className="heading max-w-3xl text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
+            Пять шагов, которые держат ремонт под контролем.
+          </h2>
+        </div>
+        <div className="mt-12 grid gap-4 md:grid-cols-5">
           {process.map((step, index) => (
-            <div key={step} className="relative rounded-lg border border-white/9 bg-white/[0.035] p-5">
-              <span className="text-sm text-cyan-200">0{index + 1}</span>
-              <h3 className="mt-8 text-xl font-semibold text-white">{step}</h3>
+            <div
+              key={step}
+              className="reveal card card-interactive p-6"
+              style={{ transitionDelay: `${index * 70}ms` }}
+            >
+              <span className="font-mono text-sm text-[var(--accent)]">0{index + 1}</span>
+              <h3 className="mt-9 text-lg font-semibold text-white">{step}</h3>
               <p className="mt-3 text-sm leading-6 text-slate-400">
                 {index === 0 && "Оставляете заявку или звоните напрямую."}
                 {index === 1 && "Проверяем устройство и находим причину."}
@@ -245,50 +303,64 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section id="calculator" className="mx-auto grid max-w-7xl gap-8 px-4 py-20 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
-        <div>
+      <section id="calculator" className="mx-auto grid max-w-7xl gap-10 px-5 py-24 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8 lg:py-32">
+        <div className="reveal self-center">
           <SectionLabel>Калькулятор</SectionLabel>
-          <h2 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">Предварительная оценка без звонка.</h2>
-          <p className="mt-5 text-lg leading-8 text-slate-300">
+          <h2 className="heading text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
+            Предварительная оценка без звонка.
+          </h2>
+          <p className="mt-6 text-lg leading-8 text-slate-300">
             Выберите устройство и тип ремонта. Итоговая цена уточняется после диагностики, но порядок бюджета понятен заранее.
           </p>
         </div>
-        <div className="rounded-lg border border-cyan-200/15 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.16),transparent_34%),rgba(255,255,255,0.045)] p-5 backdrop-blur-2xl sm:p-7">
-          <div className="grid gap-4 sm:grid-cols-2">
+        <div className="reveal panel p-6 sm:p-8">
+          <div className="grid gap-5 sm:grid-cols-2">
             <label className="block">
-              <span className="mb-2 block text-sm text-slate-300">Устройство</span>
-              <select value={device} onChange={(event) => setDevice(event.target.value)} className="h-12 w-full rounded-lg border border-white/10 bg-black/40 px-4 text-white outline-none transition focus:border-cyan-200/60">
-                {Object.keys(devicePrices).map((item) => <option key={item}>{item}</option>)}
+              <span className="field-label">Устройство</span>
+              <select className="select" value={device} onChange={(event) => setDevice(event.target.value)}>
+                {Object.keys(devicePrices).map((item) => (
+                  <option key={item}>{item}</option>
+                ))}
               </select>
             </label>
             <label className="block">
-              <span className="mb-2 block text-sm text-slate-300">Неисправность</span>
-              <select value={repair} onChange={(event) => setRepair(event.target.value)} className="h-12 w-full rounded-lg border border-white/10 bg-black/40 px-4 text-white outline-none transition focus:border-cyan-200/60">
-                {Object.keys(repairMultipliers).map((item) => <option key={item}>{item}</option>)}
+              <span className="field-label">Неисправность</span>
+              <select className="select" value={repair} onChange={(event) => setRepair(event.target.value)}>
+                {Object.keys(repairMultipliers).map((item) => (
+                  <option key={item}>{item}</option>
+                ))}
               </select>
             </label>
           </div>
-          <div className="mt-6 rounded-lg border border-white/8 bg-black/35 p-5">
+          <div className="mt-6 rounded-2xl border border-white/8 bg-black/30 p-6">
             <p className="text-sm text-slate-400">Ориентир стоимости</p>
             <p className="mt-2 text-4xl font-semibold tracking-tight text-white">от {estimate.toLocaleString("ru-RU")} ₽</p>
             <p className="mt-3 text-sm leading-6 text-slate-400">Точная смета после диагностики и проверки наличия комплектующих.</p>
           </div>
-          <a className="mt-5 inline-flex h-12 w-full items-center justify-center rounded-lg bg-cyan-300 px-6 text-sm font-bold text-slate-950 transition hover:bg-cyan-200" href={phoneHref}>
+          <a className="btn btn-primary btn-lg mt-5 w-full" href={phoneHref}>
             Заказать ремонт
           </a>
         </div>
       </section>
 
-      <section id="works" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <SectionLabel>Недавние ремонты</SectionLabel>
-        <h2 className="max-w-3xl text-4xl font-semibold tracking-tight text-white sm:text-5xl">Карточки работ в стиле технологичного портфолио.</h2>
-        <div className="mt-10 grid gap-5 lg:grid-cols-3">
+      <section id="works" className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8 lg:py-32">
+        <div className="reveal">
+          <SectionLabel>Недавние ремонты</SectionLabel>
+          <h2 className="heading max-w-3xl text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
+            Карточки работ в стиле технологичного портфолио.
+          </h2>
+        </div>
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
           {repairs.map((item, index) => (
-            <article key={item.device} className="rounded-lg border border-white/9 bg-white/[0.04] p-4 backdrop-blur">
+            <article
+              key={item.device}
+              className="reveal card card-interactive p-5"
+              style={{ transitionDelay: `${index * 80}ms` }}
+            >
               <RepairVisual index={index} />
               <div className="pt-5">
-                <p className="text-sm font-semibold text-cyan-200">{item.device}</p>
-                <h3 className="mt-2 text-xl font-semibold text-white">{item.work}</h3>
+                <p className="text-sm font-semibold text-[var(--accent)]">{item.device}</p>
+                <h3 className="mt-2 text-lg font-semibold text-white">{item.work}</h3>
                 <p className="mt-4 text-sm leading-6 text-slate-400">До: {item.before}</p>
                 <p className="text-sm leading-6 text-slate-300">После: {item.after}</p>
               </div>
@@ -297,19 +369,30 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section className="border-y border-white/8 bg-white/[0.025]">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
-            <div>
+      <section className="border-y border-white/8 bg-white/[0.015]">
+        <div className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8 lg:py-32">
+          <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+            <div className="reveal">
               <SectionLabel>Отзывы</SectionLabel>
-              <h2 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">Сервис, который ощущается спокойно.</h2>
+              <h2 className="heading text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
+                Сервис, который ощущается спокойно.
+              </h2>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
-              {reviews.map((review) => (
-                <figure key={review.name} className="rounded-lg border border-white/9 bg-black/30 p-5">
+              {reviews.map((review, index) => (
+                <figure
+                  key={review.name}
+                  className="reveal card p-6"
+                  style={{ transitionDelay: `${index * 80}ms` }}
+                >
                   <figcaption className="flex items-center justify-between text-sm">
                     <span className="font-semibold text-white">{review.name}</span>
-                    <span className="text-cyan-200">{review.rating}</span>
+                    <span className="tag">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z" />
+                      </svg>
+                      {review.rating}
+                    </span>
                   </figcaption>
                   <blockquote className="mt-5 text-sm leading-6 text-slate-300">“{review.text}”</blockquote>
                 </figure>
@@ -319,89 +402,94 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-8 px-4 py-20 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
-        <div className="engineer-portrait" aria-label="Профессиональный портрет инженера">
+      <section className="mx-auto grid max-w-7xl gap-10 px-5 py-24 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8 lg:py-32">
+        <div className="engineer-portrait reveal" aria-label="Профессиональный портрет инженера">
           <div className="portrait-core">
             <span />
           </div>
         </div>
-        <div className="self-center">
+        <div className="reveal self-center" style={{ transitionDelay: "80ms" }}>
           <SectionLabel>О мастере</SectionLabel>
-          <h2 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">Персональная ответственность вместо конвейера.</h2>
-          <p className="mt-5 text-lg leading-8 text-slate-300">
+          <h2 className="heading text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
+            Персональная ответственность вместо конвейера.
+          </h2>
+          <p className="mt-6 text-lg leading-8 text-slate-300">
             VRN-36 Mobile Service строится вокруг личной экспертизы инженера: диагностика, согласование,
             ремонт и финальное тестирование проходят через одного ответственного специалиста.
           </p>
           <div className="mt-8 grid gap-3 sm:grid-cols-3">
             {["BGA и пайка", "Диагностика плат", "Аккуратная сборка"].map((skill) => (
-              <div key={skill} className="rounded-lg border border-white/9 bg-white/[0.035] p-4 text-sm font-semibold text-slate-200">{skill}</div>
+              <div key={skill} className="card p-4 text-sm font-semibold text-slate-200">
+                {skill}
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-4 py-20 sm:px-6 lg:px-8">
-        <SectionLabel>FAQ</SectionLabel>
-        <h2 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">Частые вопросы до обращения.</h2>
-        <div className="mt-8 divide-y divide-white/8 rounded-lg border border-white/9 bg-white/[0.035]">
-          {faqs.map((item, index) => (
-            <button key={item.q} onClick={() => setOpenFaq(openFaq === index ? -1 : index)} className="block w-full p-5 text-left">
-              <span className="flex items-center justify-between gap-4 text-base font-semibold text-white">
-                {item.q}
-                <span className="text-cyan-200">{openFaq === index ? "−" : "+"}</span>
-              </span>
-              {openFaq === index && <span className="mt-3 block text-sm leading-6 text-slate-400">{item.a}</span>}
-            </button>
-          ))}
+      <section className="mx-auto max-w-4xl px-5 py-24 sm:px-6 lg:px-8 lg:py-32">
+        <div className="reveal">
+          <SectionLabel>FAQ</SectionLabel>
+          <h2 className="heading text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
+            Частые вопросы до обращения.
+          </h2>
+        </div>
+        <div className="reveal mt-10 divide-y divide-white/8 overflow-hidden rounded-xl border border-[var(--hairline)] bg-[var(--surface)]">
+          {faqs.map((item, index) => {
+            const open = openFaq === index;
+            return (
+              <div key={item.q} className="faq-item">
+                <button
+                  type="button"
+                  onClick={() => setOpenFaq(open ? -1 : index)}
+                  aria-expanded={open}
+                  className="flex w-full items-center justify-between gap-4 p-6 text-left text-base font-semibold text-white"
+                >
+                  {item.q}
+                  <Chevron open={open} />
+                </button>
+                <div className={`faq-panel ${open ? "open" : ""}`}>
+                  <div>
+                    <p className="px-6 pb-6 text-sm leading-6 text-slate-400">{item.a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
-      <section id="contacts" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div className="rounded-lg border border-cyan-200/15 bg-[radial-gradient(circle_at_20%_0%,rgba(34,211,238,0.22),transparent_36%),rgba(255,255,255,0.045)] p-6 backdrop-blur-2xl sm:p-10 lg:p-12">
-          <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
+      <section id="contacts" className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8 lg:py-32">
+        <div className="reveal panel p-7 sm:p-10 lg:p-14">
+          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
             <div>
               <SectionLabel>Контакты</SectionLabel>
-              <h2 className="text-4xl font-semibold tracking-tight text-white sm:text-6xl">Готовы вернуть технику в строй?</h2>
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
+              <h2 className="heading text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
+                Готовы вернуть технику в строй?
+              </h2>
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
                 Позвоните сейчас или напишите в удобный канал. Быстро подскажем, что проверить и как лучше привезти устройство.
               </p>
             </div>
             <div className="grid gap-3">
-              <a className="rounded-lg bg-cyan-300 px-5 py-4 text-center text-sm font-bold text-slate-950 transition hover:bg-cyan-200" href={phoneHref}>Позвонить сейчас · {phone}</a>
+              <a className="btn btn-primary btn-lg w-full" href={phoneHref}>
+                Позвонить сейчас · {phone}
+              </a>
               <div className="grid gap-3 sm:grid-cols-3">
-                <a className="rounded-lg border border-white/10 bg-black/30 px-4 py-3 text-center text-sm font-semibold text-white transition hover:border-cyan-200/40" href={telegramHref} target="_blank" rel="noreferrer">Telegram</a>
-                <a className="rounded-lg border border-white/10 bg-black/30 px-4 py-3 text-center text-sm font-semibold text-white transition hover:border-cyan-200/40" href={whatsappHref} target="_blank" rel="noreferrer">WhatsApp</a>
-                <a className="rounded-lg border border-white/10 bg-black/30 px-4 py-3 text-center text-sm font-semibold text-white transition hover:border-cyan-200/40" href={vkHref} target="_blank" rel="noreferrer">VK</a>
+                <a className="btn btn-secondary btn-md" href={telegramHref} target="_blank" rel="noreferrer">
+                  Telegram
+                </a>
+                <a className="btn btn-secondary btn-md" href={whatsappHref} target="_blank" rel="noreferrer">
+                  WhatsApp
+                </a>
+                <a className="btn btn-secondary btn-md" href={vkHref} target="_blank" rel="noreferrer">
+                  VK
+                </a>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      <footer className="border-t border-white/8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-12 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
-          <div>
-            <BrandLockup />
-            <p className="mt-4 max-w-md text-sm leading-6 text-slate-400">
-              Ремонт техники в Воронеже и пригороде. Старший инженер — Михеев Фёдор Евгеньевич.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 text-sm text-slate-400 md:items-end">
-            <a className="font-semibold text-white transition hover:text-cyan-200" href={phoneHref}>{phone}</a>
-            <div className="flex gap-5">
-              <a className="transition hover:text-white" href={telegramHref} target="_blank" rel="noreferrer">Telegram</a>
-              <a className="transition hover:text-white" href={whatsappHref} target="_blank" rel="noreferrer">WhatsApp</a>
-              <a className="transition hover:text-white" href={vkHref} target="_blank" rel="noreferrer">VK</a>
-            </div>
-          </div>
-        </div>
-        <div className="border-t border-white/8">
-          <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-5 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-            <span>© {new Date().getFullYear()} VRN-36 Mobile Service. Все права защищены.</span>
-            <a className="transition hover:text-slate-300" href="#top">Политика конфиденциальности</a>
-          </div>
-        </div>
-      </footer>
-    </main>
+    </>
   );
 }
