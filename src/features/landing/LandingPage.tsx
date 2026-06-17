@@ -56,6 +56,16 @@ const services: Service[] = [
     ],
   },
   {
+    title: "Восстановление данных",
+    copy: "Профессиональное извлечение информации с неисправных HDD, SSD, USB-флешек и мобильных устройств после удаления или поломки.",
+    meta: "конфиденциально",
+    prices: [
+      { label: "HDD / SSD", price: "от 3 000 ₽" },
+      { label: "Смартфоны", price: "от 2 500 ₽" },
+      { label: "Флешки / SD", price: "от 1 500 ₽" },
+    ],
+  },
+  {
     title: "Бытовая электроника",
     copy: "Ремонт телевизоров, ТВ-приставок, игровых консолей, сетевого оборудования и другой бытовой электроники по заявке.",
     meta: "по заявке",
@@ -69,6 +79,7 @@ const services: Service[] = [
 
 const reasons = [
   "Более 12 лет опыта ремонта смартфонов, ноутбуков и электроники",
+  "Используем оригинальные запчасти в большинстве наших ремонтов",
   "Диагностика с объяснением причины неисправности и вариантов ремонта",
   "Гарантия на выполненные работы и установленные комплектующие",
   "Выезд мастера по Воронежу и ближайшим районам",
@@ -139,6 +150,7 @@ const devicePrices: Record<string, number> = {
   Ноутбук: 4000,
   Планшет: 2800,
   "ПК": 2000,
+  "Восстановление данных": 3000,
   "Бытовая техника": 2000,
 };
 
@@ -147,6 +159,7 @@ const repairMultipliers: Record<string, number> = {
   "Питание": 0.75,
   "Чистка": 0.7,
   "После влаги": 0.72,
+  "Восстановление": 1,
 };
 
 function SectionLabel({ children }: { children: string }) {
@@ -502,6 +515,34 @@ export function LandingPage() {
                 </figure>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto grid max-w-7xl gap-10 px-5 py-24 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8 lg:py-32">
+        <div className="engineer-portrait reveal">
+          <img
+            className="engineer-portrait-img"
+            src="/master-portrait.avif"
+            alt="Михеев Фёдор Евгеньевич — старший инженер VRN-36 Mobile Service"
+            loading="lazy"
+          />
+        </div>
+        <div className="reveal self-center" style={{ transitionDelay: "80ms" }}>
+          <SectionLabel>О мастере</SectionLabel>
+          <h2 className="heading text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
+            Персональная ответственность вместо конвейера.
+          </h2>
+          <p className="mt-6 text-lg leading-8 text-slate-300">
+            VRN-36 Mobile Service строится вокруг личной экспертизы инженера: диагностика, согласование,
+            ремонт и финальное тестирование проходят через одного ответственного специалиста.
+          </p>
+          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            {["BGA и пайка", "Диагностика плат", "Аккуратная сборка"].map((skill) => (
+              <div key={skill} className="card p-4 text-sm font-semibold text-slate-200">
+                {skill}
+              </div>
+            ))}
           </div>
         </div>
       </section>
