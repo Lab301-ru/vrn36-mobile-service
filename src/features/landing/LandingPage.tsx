@@ -159,7 +159,7 @@ const repairMultipliers: Record<string, number> = {
   "Питание": 0.75,
   "Чистка": 0.7,
   "После влаги": 0.72,
-  "Восстановление": 1,
+  "Восстановление данных": 1,
 };
 
 function SectionLabel({ children }: { children: string }) {
@@ -254,6 +254,25 @@ export function LandingPage() {
 
   const [device, setDevice] = useState("Смартфон");
   const [repair, setRepair] = useState("Экран");
+
+  const filteredRepairs = useMemo(() => {
+    const keys = Object.keys(repairMultipliers);
+    if (device === "Восстановление данных") {
+      return ["Восстановление данных"];
+    }
+    const list = keys.filter((k) => k !== "Восстановление данных");
+    if (device === "ПК" || device === "Бытовая техника") {
+      return list.filter((k) => k !== "Экран");
+    }
+    return list;
+  }, [device]);
+
+  useEffect(() => {
+    if (!filteredRepairs.includes(repair)) {
+      setRepair(filteredRepairs[0]);
+    }
+  }, [device, filteredRepairs, repair]);
+
   const [openFaq, setOpenFaq] = useState(-1);
   const [modal, setModal] = useState<{ open: boolean; mode: RequestMode; service: string | null }>({
     open: false,
@@ -267,7 +286,7 @@ export function LandingPage() {
   const scrollToCalc = () => document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth" });
 
   const estimate = useMemo(() => {
-    const value = devicePrices[device] * repairMultipliers[repair];
+    const value = devicePrices[device] * (repairMultipliers[repair] || 1);
     return Math.round(value / 100) * 100;
   }, [device, repair]);
 
@@ -441,7 +460,7 @@ export function LandingPage() {
             <label className="block">
               <span className="field-label">Неисправность</span>
               <select className="select" value={repair} onChange={(event) => setRepair(event.target.value)}>
-                {Object.keys(repairMultipliers).map((item) => (
+                {filteredRepairs.map((item) => (
                   <option key={item}>{item}</option>
                 ))}
               </select>
