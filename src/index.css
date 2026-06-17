@@ -547,20 +547,100 @@ body {
   position: absolute;
   right: 4%;
   bottom: 12%;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
   height: 6.6rem;
   width: 6.6rem;
-  place-items: center;
   border-radius: 1.4rem;
   border: 1px solid rgba(255, 255, 255, 0.16);
   background: linear-gradient(160deg, #14161c, #0b0c0e);
   color: #ffffff;
-  font-size: 1.85rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
   box-shadow: 0 26px 50px -18px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   transform: rotateZ(9deg);
   animation: floatChip 8s ease-in-out infinite;
+}
+.chip-stars {
+  display: flex;
+  gap: 0.08rem;
+  color: #ffc83d;
+}
+.chip-rating {
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* CTA «Позвонить» в шапке — градиентная рамка со свечением (в стиле Vercel) */
+.cta-glow {
+  position: relative;
+  display: inline-flex;
+  border-radius: 0.8rem;
+  padding: 1.5px;
+  background: linear-gradient(110deg, #3b82f6, #8b5cf6 38%, #ec4899 66%, #3b82f6);
+  background-size: 200% 100%;
+  animation: ctaGlow 6s linear infinite;
+  transition: transform 0.16s var(--ease-out);
+}
+.cta-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: inherit;
+  background-size: 200% 100%;
+  filter: blur(9px);
+  opacity: 0.55;
+  animation: ctaGlow 6s linear infinite;
+}
+.cta-glow-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: calc(0.8rem - 1.5px);
+  padding: 0.5rem 1rem;
+  background: #0b0c0e;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+.cta-glow:hover {
+  transform: translateY(-1px);
+}
+.cta-glow:hover .cta-glow-inner {
+  background: #16181f;
+}
+.cta-glow:active {
+  transform: translateY(0);
+}
+@keyframes ctaGlow {
+  to {
+    background-position: 200% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta-glow,
+  .cta-glow::after {
+    animation: none;
+  }
+}
+
+/* Кнопки действий в карточке: перенос текста + одинаковая высота,
+   чтобы длинные подписи не обрезались в узких колонках */
+.svc-action {
+  height: auto;
+  min-height: 3.1rem;
+  width: 100%;
+  white-space: normal;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.2;
+  text-align: center;
 }
 
 /* =========================================================================
@@ -744,6 +824,121 @@ body {
   .device-chip { bottom: 4%; }
   .repair-visual { min-height: 12rem; }
   .engineer-portrait { min-height: 23rem; }
+}
+
+/* =========================================================================
+   Сервисная матрица — карточки с iOS-тогглом
+   ========================================================================= */
+.service-card {
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+}
+/* Компактная область одинаковой высоты в ряду — бейджи на одной линии.
+   Бейдж прижат к низу через mt-auto, min-height задаёт общий «пол». */
+@media (min-width: 768px) {
+  .service-compact { min-height: 16rem; }
+}
+@media (min-width: 1024px) {
+  .service-compact { min-height: 23rem; }
+}
+.service-card.is-active {
+  border-color: rgba(52, 199, 89, 0.5);
+  box-shadow: 0 0 0 1px rgba(52, 199, 89, 0.35), 0 0 44px rgba(52, 199, 89, 0.2);
+}
+
+/* Нативный iOS-style переключатель */
+.ios-toggle {
+  position: relative;
+  display: inline-flex;
+  height: 1.75rem;
+  width: 2.875rem;
+  flex: none;
+  border-radius: 999px;
+  background: rgba(120, 120, 128, 0.34);
+  transition: background-color 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.ios-toggle.is-on {
+  background: #34c759;
+}
+.ios-toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.45);
+}
+.ios-toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+.ios-toggle.is-on .ios-toggle-knob {
+  transform: translateX(1.125rem);
+}
+
+/* Текстовый инпут (модалка заявки) */
+.input {
+  height: 3rem;
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid var(--hairline);
+  background-color: var(--surface);
+  color: var(--text);
+  padding: 0 1rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.input::placeholder {
+  color: var(--text-subtle);
+  font-weight: 400;
+}
+.input:focus-visible {
+  outline: none;
+  border-color: var(--link);
+  box-shadow: 0 0 0 3px rgba(40, 98, 215, 0.4);
+}
+
+/* Модальное окно заявки */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(3, 6, 14, 0.72);
+  backdrop-filter: blur(6px);
+}
+.modal-panel {
+  position: relative;
+  width: 100%;
+  max-width: 27rem;
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  padding: 1.75rem;
+}
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  height: 2.25rem;
+  width: 2.25rem;
+  place-items: center;
+  border-radius: 0.625rem;
+  border: 1px solid var(--hairline);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-subtle);
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+.modal-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* =========================================================================

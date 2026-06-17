@@ -1,23 +1,77 @@
 import { useEffect, useMemo, useState } from "react";
 import { site } from "@/config/site";
 import { useDocumentMeta } from "@/hooks/useDocumentMeta";
+import { ServiceCard } from "./ServiceCard";
+import { RequestModal, type RequestMode } from "@/components/RequestModal";
 
 const { phone, phoneHref, telegramHref, whatsappHref, vkHref } = site;
 
-const services = [
-  { title: "Смартфоны", copy: "Дисплеи, батареи, разъемы, камеры, восстановление после влаги.", meta: "от 30 минут" },
-  { title: "Ноутбуки", copy: "Диагностика плат, чистка, замена матриц, клавиатур и накопителей.", meta: "точная смета" },
-  { title: "Планшеты", copy: "Стекла, аккумуляторы, корпусные элементы и программные сбои.", meta: "с гарантией" },
-  { title: "Компьютеры", copy: "Сборка, апгрейд, ремонт питания, охлаждения и нестабильной работы.", meta: "на дому" },
-  { title: "Бытовая электроника", copy: "Телевизоры, приставки, мелкая техника и умные устройства.", meta: "по заявке" },
+export type Service = {
+  title: string;
+  copy: string;
+  meta: string;
+  prices: { label: string; price: string }[];
+};
+
+const services: Service[] = [
+  {
+    title: "Смартфоны",
+    copy: "Замена экранов и стекол, аккумуляторов, разъемов зарядки, камер и динамиков. Ремонт iPhone, Samsung, Xiaomi, Honor, Huawei и других смартфонов.",
+    meta: "от 30 минут",
+    prices: [
+      { label: "Замена дисплея", price: "от 2 500 ₽" },
+      { label: "Замена батареи", price: "от 1 500 ₽" },
+      { label: "После влаги", price: "от 1 800 ₽" },
+    ],
+  },
+  {
+    title: "Ноутбуки",
+    copy: "Чистка системы охлаждения, замена термопасты, ремонт матриц, клавиатур, SSD и разъемов питания. Восстановление после перегрева и попадания жидкости.",
+    meta: "точная смета",
+    prices: [
+      { label: "Чистка + термопаста", price: "от 1 800 ₽" },
+      { label: "Замена матрицы", price: "от 4 000 ₽" },
+      { label: "Замена клавиатуры", price: "от 2 500 ₽" },
+    ],
+  },
+  {
+    title: "Планшеты",
+    copy: "Замена стекол и дисплеев, аккумуляторов, кнопок и разъемов. Устранение программных ошибок и восстановление после механических повреждений.",
+    meta: "с гарантией",
+    prices: [
+      { label: "Замена стекла", price: "от 2 800 ₽" },
+      { label: "Замена аккумулятора", price: "от 2 200 ₽" },
+      { label: "Ремонт разъёма", price: "от 1 900 ₽" },
+    ],
+  },
+  {
+    title: "Компьютеры",
+    copy: "Диагностика и ремонт ПК, модернизация комплектующих, настройка Windows, устранение перегрева, неисправностей питания и нестабильной работы системы.",
+    meta: "на дому",
+    prices: [
+      { label: "Чистка + охлаждение", price: "от 1 500 ₽" },
+      { label: "Ремонт питания", price: "от 2 000 ₽" },
+      { label: "Апгрейд / сборка", price: "от 1 500 ₽" },
+    ],
+  },
+  {
+    title: "Бытовая электроника",
+    copy: "Ремонт телевизоров, ТВ-приставок, игровых консолей, сетевого оборудования и другой бытовой электроники по заявке.",
+    meta: "по заявке",
+    prices: [
+      { label: "Диагностика", price: "бесплатно" },
+      { label: "Ремонт ТВ / приставок", price: "от 2 000 ₽" },
+      { label: "Выезд по городу", price: "от 500 ₽" },
+    ],
+  },
 ];
 
 const reasons = [
-  "Опытный инженер, который сам отвечает за результат",
-  "Быстрая диагностика без навязывания лишних работ",
-  "Гарантия на выполненный ремонт и установленные детали",
-  "Выезд по Воронежу для техники, которую неудобно везти",
-  "Прозрачная цена до начала ремонта",
+  "Более 12 лет опыта ремонта смартфонов, ноутбуков и электроники",
+  "Диагностика с объяснением причины неисправности и вариантов ремонта",
+  "Гарантия на выполненные работы и установленные комплектующие",
+  "Выезд мастера по Воронежу и ближайшим районам",
+  "Фиксация стоимости до начала ремонта без скрытых доплат",
 ];
 
 const process = ["Заявка", "Диагностика", "Согласование", "Ремонт", "Выдача"];
@@ -63,19 +117,19 @@ const reviews = [
 const faqs = [
   {
     q: "Сколько стоит диагностика?",
-    a: "Предварительная консультация бесплатная. Стоимость аппаратной диагностики зависит от устройства и заранее согласуется.",
+    a: "Стоимость диагностики зависит от типа устройства и характера неисправности. Перед началом работ мастер согласует условия и расскажет о возможных вариантах ремонта.",
   },
   {
     q: "Можно ли вызвать мастера домой?",
-    a: "Да, выезд доступен по Воронежу для компьютеров, ноутбуков, телевизоров и другой техники, которую сложно привезти.",
+    a: "Да. Для крупной техники, телевизоров, компьютеров и случаев, когда устройство неудобно доставлять самостоятельно, возможен выезд мастера по Воронежу и пригородам.",
   },
   {
     q: "Вы даете гарантию?",
-    a: "Да, гарантия зависит от типа ремонта и комплектующих. Ее условия фиксируются при выдаче устройства.",
+    a: "Да. На выполненные работы и установленные комплектующие предоставляется гарантия. Срок зависит от типа ремонта и используемых деталей.",
   },
   {
     q: "Можно ли срочно заменить экран или батарею?",
-    a: "Для популярных моделей это часто можно сделать в день обращения, если деталь есть в наличии.",
+    a: "Многие популярные ремонты смартфонов выполняются в день обращения при наличии необходимых комплектующих.",
   },
 ];
 
@@ -115,7 +169,14 @@ function DeviceStack() {
         <div className="laptop-base" />
       </div>
       <div className="device-chip">
-        <span>36</span>
+        <div className="chip-stars">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <svg key={i} width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z" />
+            </svg>
+          ))}
+        </div>
+        <span className="chip-rating">5.0</span>
       </div>
     </div>
   );
@@ -180,6 +241,16 @@ export function LandingPage() {
   const [device, setDevice] = useState("Смартфон");
   const [repair, setRepair] = useState("Экран");
   const [openFaq, setOpenFaq] = useState(0);
+  const [modal, setModal] = useState<{ open: boolean; mode: RequestMode; service: string | null }>({
+    open: false,
+    mode: "call",
+    service: null,
+  });
+
+  const openCall = (service: string) => setModal({ open: true, mode: "call", service });
+  const openConsult = (service: string) => setModal({ open: true, mode: "consult", service });
+  const closeModal = () => setModal((m) => ({ ...m, open: false }));
+  const scrollToCalc = () => document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth" });
 
   const estimate = useMemo(() => {
     const value = devicePrices[device] * repairMultipliers[repair];
@@ -217,14 +288,16 @@ export function LandingPage() {
       >
         <div className="relative z-10">
           <div className="reveal">
-            <SectionLabel>Ремонт техники в Воронеже</SectionLabel>
+            <SectionLabel>Сервисный центр в Воронеже</SectionLabel>
           </div>
           <h1 className="reveal display max-w-4xl text-balance text-[2.7rem] font-semibold text-white sm:text-6xl lg:text-[4.5rem]" style={{ transitionDelay: "60ms" }}>
-            Премиальный сервис для устройств, которым вы доверяете каждый день.
+            Ремонт телефонов, ноутбуков и электроники в Воронеже
           </h1>
           <p className="reveal mt-6 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl" style={{ transitionDelay: "120ms" }}>
-            Смартфоны, ноутбуки, планшеты, компьютеры и домашняя электроника. Честная диагностика,
-            аккуратный ремонт и спокойная гарантия без ощущения обычной мастерской.
+            Сервисный ремонт смартфонов, ноутбуков, планшетов, компьютеров, телевизоров и бытовой техники.
+            Выполняем диагностику, замену экранов и аккумуляторов, ремонт после влаги и восстановление
+            сложных неисправностей. Согласовываем стоимость до начала работ, предоставляем гарантию и
+            работаем по всему Воронежу.
           </p>
           <div className="reveal mt-9 flex flex-col gap-3 sm:flex-row" style={{ transitionDelay: "180ms" }}>
             <a className="btn btn-primary btn-lg" href={phoneHref}>
@@ -257,29 +330,23 @@ export function LandingPage() {
           <div>
             <SectionLabel>Сервисная матрица</SectionLabel>
             <h2 className="heading max-w-3xl text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
-              Техника получает инженерный подход, а не случайный ремонт.
+              Каждое устройство проходит диагностику и ремонт по понятному алгоритму. От замены экрана смартфона до восстановления ноутбука после залития — решение подбирается под неисправность, а не по шаблону.
             </h2>
           </div>
           <a className="btn btn-secondary btn-md w-fit" href="#calculator">
             Заказать ремонт
           </a>
         </div>
-        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-12 grid items-start gap-4 md:grid-cols-2 lg:grid-cols-5">
           {services.map((service, index) => (
-            <article
+            <ServiceCard
               key={service.title}
-              className="reveal card card-interactive p-6"
-              style={{ transitionDelay: `${index * 70}ms` }}
-            >
-              <div className="mb-9 grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/5">
-                <span className="h-2 w-2 rounded-full bg-[var(--accent)]" />
-              </div>
-              <h3 className="text-lg font-semibold text-white">{service.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-slate-400">{service.copy}</p>
-              <div className="mt-6">
-                <span className="tag">{service.meta}</span>
-              </div>
-            </article>
+              service={service}
+              index={index}
+              onCall={openCall}
+              onConsult={openConsult}
+              onCalc={scrollToCalc}
+            />
           ))}
         </div>
       </section>
@@ -289,7 +356,7 @@ export function LandingPage() {
           <div className="reveal">
             <SectionLabel>Почему выбирают нас</SectionLabel>
             <h2 className="heading text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
-              Тихая уверенность вместо громких обещаний.
+              Понятные условия, профессиональная диагностика и ответственность за результат.
             </h2>
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
               Клиент видит состояние техники, варианты ремонта, стоимость и сроки до начала работ.
@@ -318,7 +385,7 @@ export function LandingPage() {
         <div className="reveal">
           <SectionLabel>Процесс</SectionLabel>
           <h2 className="heading max-w-3xl text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
-            Пять шагов, которые держат ремонт под контролем.
+            Прозрачный процесс ремонта от обращения до выдачи устройства.
           </h2>
         </div>
         <div className="mt-12 grid gap-4 md:grid-cols-5">
@@ -346,7 +413,7 @@ export function LandingPage() {
         <div className="reveal self-center">
           <SectionLabel>Калькулятор</SectionLabel>
           <h2 className="heading text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
-            Предварительная оценка без звонка.
+            Узнайте ориентировочную стоимость ремонта смартфона, ноутбука, планшета или компьютера до обращения в сервис.
           </h2>
           <p className="mt-6 text-lg leading-8 text-slate-300">
             Выберите устройство и тип ремонта. Итоговая цена уточняется после диагностики, но порядок бюджета понятен заранее.
@@ -386,7 +453,7 @@ export function LandingPage() {
         <div className="reveal">
           <SectionLabel>Недавние ремонты</SectionLabel>
           <h2 className="heading max-w-3xl text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
-            Карточки работ в стиле технологичного портфолио.
+            Примеры выполненных ремонтов смартфонов, ноутбуков и планшетов с описанием неисправностей и результата.
           </h2>
         </div>
         <div className="mt-12 grid gap-5 lg:grid-cols-3">
@@ -453,11 +520,13 @@ export function LandingPage() {
         <div className="reveal self-center" style={{ transitionDelay: "80ms" }}>
           <SectionLabel>О мастере</SectionLabel>
           <h2 className="heading text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
-            Персональная ответственность вместо конвейера.
+            Один инженер отвечает за диагностику, согласование, ремонт и итоговое тестирование устройства.
           </h2>
           <p className="mt-6 text-lg leading-8 text-slate-300">
-            VRN-36 Mobile Service строится вокруг личной экспертизы инженера: диагностика, согласование,
-            ремонт и финальное тестирование проходят через одного ответственного специалиста.
+            VRN-36 Mobile Service специализируется на ремонте телефонов, ноутбуков, планшетов и
+            компьютерной техники в Воронеже. Каждый заказ проходит диагностику, согласование стоимости и
+            проверку после ремонта. Такой подход позволяет сохранять качество работ и контролировать
+            результат на каждом этапе.
           </p>
           <div className="mt-8 grid gap-3 sm:grid-cols-3">
             {["BGA и пайка", "Диагностика плат", "Аккуратная сборка"].map((skill) => (
@@ -507,10 +576,10 @@ export function LandingPage() {
             <div>
               <SectionLabel>Контакты</SectionLabel>
               <h2 className="heading text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
-                Готовы вернуть технику в строй?
+                Нужен ремонт телефона, ноутбука или другой техники в Воронеже?
               </h2>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-                Позвоните сейчас или напишите в удобный канал. Быстро подскажем, что проверить и как лучше привезти устройство.
+                Свяжитесь с мастером по телефону, в Telegram или WhatsApp. Опишите неисправность, и мы подскажем возможную причину поломки, ориентировочную стоимость ремонта и удобный способ передачи устройства.
               </p>
             </div>
             <div className="grid gap-3">
@@ -532,6 +601,8 @@ export function LandingPage() {
           </div>
         </div>
       </section>
+
+      <RequestModal open={modal.open} mode={modal.mode} service={modal.service} onClose={closeModal} />
     </>
   );
 }
