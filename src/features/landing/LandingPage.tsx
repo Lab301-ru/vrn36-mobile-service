@@ -136,17 +136,17 @@ const faqs = [
 
 const devicePrices: Record<string, number> = {
   Смартфон: 2500,
-  Ноутбук: 4200,
-  Планшет: 3300,
-  "ПК": 3000,
-  "Бытовая техника": 3600,
+  Ноутбук: 4000,
+  Планшет: 2800,
+  "ПК": 2000,
+  "Бытовая техника": 2000,
 };
 
 const repairMultipliers: Record<string, number> = {
-  "Экран": 1.6,
-  "Питание": 1.2,
-  "Чистка": 0.75,
-  "После влаги": 1.45,
+  "Экран": 1,
+  "Питание": 0.75,
+  "Чистка": 0.7,
+  "После влаги": 0.72,
 };
 
 function SectionLabel({ children }: { children: string }) {
@@ -318,32 +318,30 @@ export function LandingPage() {
               по всему Воронежу
             </div>
             <div className="card p-4">
-              <strong className="block whitespace-nowrap text-base font-semibold tracking-tight text-white">{phone}</strong>
-              прямая связь с мастером
+              <strong className="block whitespace-nowrap text-base font-semibold text-white sm:text-xl">
+                Честная цена
+              </strong>
+              без скрытых услуг
             </div>
           </div>
         </div>
+
         <DeviceStack />
       </section>
 
-      <section id="services" className="relative mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8 lg:py-32">
-        <div className="reveal flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <div>
-            <SectionLabel>Сервисная матрица</SectionLabel>
-            <h2 className="heading max-w-3xl text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
-              Каждое устройство проходит диагностику и ремонт по понятному алгоритму. От замены экрана смартфона до восстановления ноутбука после залития — решение подбирается под неисправность, а не по шаблону.
-            </h2>
-          </div>
-          <a className="btn btn-secondary btn-md w-fit" href="#calculator">
-            Заказать ремонт
-          </a>
+      <section id="services" className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8 lg:py-32">
+        <div className="reveal">
+          <SectionLabel>Услуги</SectionLabel>
+          <h2 className="heading max-w-3xl text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
+            Специализированный ремонт цифровой и бытовой техники любой сложности.
+          </h2>
         </div>
-        <div className="mt-12 grid items-start gap-4 md:grid-cols-2 lg:grid-cols-5">
-          {services.map((service, index) => (
+        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {services.map((s, i) => (
             <ServiceCard
-              key={service.title}
-              service={service}
-              index={index}
+              key={s.title}
+              service={s}
+              index={i}
               onCall={openCall}
               onConsult={openConsult}
               onCalc={scrollToCalc}
@@ -352,52 +350,49 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section className="relative border-y border-white/8 bg-white/[0.015]">
-        <div className="mx-auto grid max-w-7xl gap-12 px-5 py-24 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8 lg:py-32">
-          <div className="reveal">
-            <SectionLabel>Почему выбирают нас</SectionLabel>
-            <h2 className="heading text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
-              Понятные условия, профессиональная диагностика и ответственность за результат.
-            </h2>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
-              Клиент видит состояние техники, варианты ремонта, стоимость и сроки до начала работ.
-            </p>
-          </div>
-          <div className="grid gap-3">
-            {reasons.map((reason, index) => (
-              <div
-                key={reason}
-                className="reveal card flex items-start gap-4 p-5"
-                style={{ transitionDelay: `${index * 70}ms` }}
-              >
-                <span className="check-badge" aria-hidden="true">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 6 9 17l-5-5" />
-                  </svg>
-                </span>
-                <p className="text-base leading-7 text-slate-200">{reason}</p>
+      <section className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8 lg:py-32">
+        <div className="reveal">
+          <SectionLabel>Почему мы</SectionLabel>
+          <h2 className="heading max-w-3xl text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
+            Прозрачный подход к ремонту и ответственности за результат.
+          </h2>
+        </div>
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {reasons.map((text, i) => (
+            <div
+              key={text}
+              className="reveal card p-6 sm:p-8"
+              style={{ transitionDelay: `${i * 60}ms` }}
+            >
+              <div className="check-badge mb-6">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
               </div>
-            ))}
-          </div>
+              <p className="text-lg font-medium leading-relaxed text-white">{text}</p>
+            </div>
+          ))}
         </div>
       </section>
 
       <section id="process" className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8 lg:py-32">
         <div className="reveal">
-          <SectionLabel>Процесс</SectionLabel>
+          <SectionLabel>Как мы работаем</SectionLabel>
           <h2 className="heading max-w-3xl text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
-            Прозрачный процесс ремонта от обращения до выдачи устройства.
+            Пять простых шагов от вашей заявки до исправного устройства.
           </h2>
         </div>
-        <div className="mt-12 grid gap-4 md:grid-cols-5">
+        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
           {process.map((step, index) => (
             <div
               key={step}
-              className="reveal card card-interactive p-6"
-              style={{ transitionDelay: `${index * 70}ms` }}
+              className="reveal relative"
+              style={{ transitionDelay: `${index * 80}ms` }}
             >
-              <span className="font-mono text-sm text-[var(--accent)]">0{index + 1}</span>
-              <h3 className="mt-9 text-lg font-semibold text-white">{step}</h3>
+              <div className="mb-5 flex items-baseline gap-3">
+                <span className="text-4xl font-bold tabular-nums text-white/10">{index + 1}</span>
+                <h3 className="text-xl font-semibold text-white">{step}</h3>
+              </div>
               <p className="mt-3 text-sm leading-6 text-slate-400">
                 {index === 0 && "Оставляете заявку или звоните напрямую."}
                 {index === 1 && "Проверяем устройство и находим причину."}
@@ -511,37 +506,7 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-10 px-5 py-24 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8 lg:py-32">
-        <div className="engineer-portrait reveal">
-          <img
-            className="engineer-portrait-img"
-            src="/master-portrait.avif"
-            alt="Михеев Фёдор Евгеньевич — старший инженер VRN-36 Mobile Service"
-            loading="lazy"
-          />
-        </div>
-        <div className="reveal self-center" style={{ transitionDelay: "80ms" }}>
-          <SectionLabel>О мастере</SectionLabel>
-          <h2 className="heading text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
-            Один инженер отвечает за диагностику, согласование, ремонт и итоговое тестирование устройства.
-          </h2>
-          <p className="mt-6 text-lg leading-8 text-slate-300">
-            VRN-36 Mobile Service специализируется на ремонте телефонов, ноутбуков, планшетов и
-            компьютерной техники в Воронеже. Каждый заказ проходит диагностику, согласование стоимости и
-            проверку после ремонта. Такой подход позволяет сохранять качество работ и контролировать
-            результат на каждом этапе.
-          </p>
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
-            {["BGA и пайка", "Диагностика плат", "Аккуратная сборка"].map((skill) => (
-              <div key={skill} className="card p-4 text-sm font-semibold text-slate-200">
-                {skill}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-4xl px-5 py-24 sm:px-6 lg:px-8 lg:py-32">
+      <section id="faq" className="mx-auto max-w-4xl px-5 py-24 sm:px-6 lg:px-8 lg:py-32">
         <div className="reveal">
           <SectionLabel>FAQ</SectionLabel>
           <h2 className="heading text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">

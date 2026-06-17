@@ -15,6 +15,7 @@
   --color-text: #ffffff;        /* quartz */
   --color-muted: #abaebb;       /* ash */
   --color-primary: #2862d7;     /* signal-blue (link) */
+  --breakpoint-xs: 380px;
   --color-danger: #ef4444;
   --color-success: #22c55e;
   --color-warning: #f59e0b;

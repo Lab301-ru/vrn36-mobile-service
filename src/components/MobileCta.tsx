@@ -4,10 +4,10 @@ import { site } from "@/config/site";
 export function MobileCta() {
   return (
     <div className="mobile-cta md:hidden">
-      <a className="btn btn-primary btn-md flex-1" href={site.phoneHref}>
+      <a className="btn btn-primary btn-md flex-1 !h-[3.25rem] !text-base" href={site.phoneHref}>
         Позвонить
       </a>
-      <a className="btn btn-secondary btn-md flex-1" href={site.telegramHref} target="_blank" rel="noreferrer">
+      <a className="btn btn-secondary btn-md flex-1 !h-[3.25rem] !text-base" href={site.telegramHref} target="_blank" rel="noreferrer">
         Telegram
       </a>
     </div>
