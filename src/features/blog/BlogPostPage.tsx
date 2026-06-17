@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 import { site } from "@/config/site";
-import { formatDate, getPost, type PostBlock } from "./posts";
+import { fetchPostBySlug, formatDate, parseBody, type Block, type Post } from "./api";
 
-function Block({ block }: { block: PostBlock }) {
+function BlockView({ block }: { block: Block }) {
   if (block.type === "h2") {
     return <h2 className="mt-10 text-2xl font-semibold text-white">{block.text}</h2>;
   }
@@ -24,15 +25,29 @@ function Block({ block }: { block: PostBlock }) {
 
 export function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
-  const post = slug ? getPost(slug) : undefined;
+  const [post, setPost] = useState<Post | null | undefined>(undefined); // undefined = загрузка
+
+  useEffect(() => {
+    if (!slug) return;
+    let active = true;
+    fetchPostBySlug(slug)
+      .then((p) => active && setPost(p))
+      .catch(() => active && setPost(null));
+    return () => {
+      active = false;
+    };
+  }, [slug]);
 
   useDocumentMeta({
-    title: post ? `${post.title} — Блог VRN-36` : "Статья не найдена — Блог VRN-36",
+    title: post ? `${post.title} — Блог VRN-36` : "Блог VRN-36",
     description: post?.description,
     path: post ? `/blog/${post.slug}` : "/blog",
   });
 
-  if (!post) {
+  if (post === undefined) {
+    return <div className="mx-auto max-w-3xl px-5 pb-24 pt-32 sm:px-6 lg:px-8 lg:pt-36 text-slate-400">Загрузка…</div>;
+  }
+  if (post === null) {
     return <Navigate to="/blog" replace />;
   }
 
@@ -41,7 +56,8 @@ export function BlogPostPage() {
     "@type": "Article",
     headline: post.title,
     description: post.description,
-    datePublished: post.date,
+    datePublished: post.createdAt,
+    image: post.coverUrl ?? undefined,
     inLanguage: "ru-RU",
     author: { "@type": "Organization", name: site.name },
     publisher: { "@type": "Organization", name: site.name },
@@ -62,7 +78,7 @@ export function BlogPostPage() {
       <header className="mt-6">
         <div className="flex items-center gap-3 text-xs text-slate-400">
           <span className="tag">{post.category}</span>
-          <time dateTime={post.date}>{formatDate(post.date)}</time>
+          <time dateTime={post.createdAt}>{formatDate(post.createdAt)}</time>
           <span>· {post.readingMinutes} мин чтения</span>
         </div>
         <h1 className="heading mt-5 text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
@@ -71,9 +87,13 @@ export function BlogPostPage() {
         <p className="mt-5 text-lg leading-8 text-slate-300">{post.description}</p>
       </header>
 
+      {post.coverUrl && (
+        <img src={post.coverUrl} alt="" className="mt-8 w-full rounded-2xl border border-white/8 object-cover" />
+      )}
+
       <div className="mt-8 border-t border-white/8 pt-2">
-        {post.body.map((block, index) => (
-          <Block key={index} block={block} />
+        {parseBody(post.body).map((block, index) => (
+          <BlockView key={index} block={block} />
         ))}
       </div>
 

@@ -42,7 +42,7 @@ export function SiteFooter() {
                 lab301 digital studio
               </a>
             </span>
-            <Link className="transition hover:text-slate-300" to="/">Политика конфиденциальности</Link>
+            <Link className="transition hover:text-slate-300" to="/privacy">Политика конфиденциальности</Link>
           </div>
         </div>
       </div>

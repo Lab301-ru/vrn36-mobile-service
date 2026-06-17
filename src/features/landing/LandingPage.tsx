@@ -3,6 +3,7 @@ import { site } from "@/config/site";
 import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 import { ServiceCard } from "./ServiceCard";
 import { RequestModal, type RequestMode } from "@/components/RequestModal";
+import { BlogCarousel } from "@/features/blog/BlogCarousel";
 
 const { phone, phoneHref, telegramHref, whatsappHref, vkHref } = site;
 
@@ -474,6 +475,8 @@ export function LandingPage() {
           ))}
         </div>
       </section>
+
+      <BlogCarousel />
 
       <section className="border-y border-white/8 bg-white/[0.015]">
         <div className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8 lg:py-32">

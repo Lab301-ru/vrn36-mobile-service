@@ -642,6 +642,13 @@ body {
   line-height: 1.2;
   text-align: center;
 }
+/* Фиксированная высота строки цены на широких экранах: списки цен у всех
+   карточек одинаковой высоты → низ раскрытых карточек выравнивается по линии */
+@media (min-width: 1024px) {
+  .service-card li {
+    min-height: 2.5rem;
+  }
+}
 
 /* =========================================================================
    Before / after panels (works)
@@ -939,6 +946,48 @@ body {
 .modal-close:hover {
   color: #fff;
   background: rgba(255, 255, 255, 0.08);
+}
+
+/* =========================================================================
+   Карусель новостей на главной
+   ========================================================================= */
+.carousel-track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 0.5rem;
+}
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
+.carousel-card {
+  flex: 0 0 auto;
+  width: 85%;
+  scroll-snap-align: start;
+}
+@media (min-width: 640px) {
+  .carousel-card {
+    width: 21rem;
+  }
+}
+.carousel-nav {
+  display: grid;
+  height: 2.75rem;
+  width: 2.75rem;
+  place-items: center;
+  border-radius: 0.75rem;
+  border: 1px solid var(--hairline);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-subtle);
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.carousel-nav:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--hairline-strong);
 }
 
 /* =========================================================================
