@@ -593,7 +593,7 @@ export function LandingPage() {
             </div>
             <div className="grid gap-3">
               <a className="btn btn-primary btn-lg w-full" href={phoneHref}>
-                Позвонить сейчас<span className="hidden sm:inline"> · {phone}</span>
+                Позвонить сейчас
               </a>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 <a className="btn btn-secondary btn-md" href={telegramHref} target="_blank" rel="noreferrer">

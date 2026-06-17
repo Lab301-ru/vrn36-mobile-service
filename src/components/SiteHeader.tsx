@@ -70,7 +70,7 @@ export function SiteHeader() {
             href={site.phoneHref}
             onClick={() => setMenuOpen(false)}
           >
-            Позвонить · {site.phone}
+            Позвонить сейчас
           </a>
         </div>
       </div>
