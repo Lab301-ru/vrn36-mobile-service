@@ -17,9 +17,7 @@ export function SiteFooter() {
           </p>
         </div>
         <div className="flex flex-col gap-3 text-sm text-slate-400 md:items-end">
-          <a className="font-semibold text-white transition hover:text-[var(--accent)]" href={site.phoneHref}>
-            {site.phone}
-          </a>
+
           <div className="flex gap-5">
             <a className="transition hover:text-white" href={site.telegramHref} target="_blank" rel="noreferrer">Telegram</a>
             <a className="transition hover:text-white" href={site.whatsappHref} target="_blank" rel="noreferrer">WhatsApp</a>
