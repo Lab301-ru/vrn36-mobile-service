@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 import { site } from "@/config/site";
 
@@ -53,6 +54,12 @@ export function PrivacyPage() {
 
   return (
     <article className="mx-auto max-w-3xl px-5 pb-24 pt-32 sm:px-6 lg:px-8 lg:pb-32 lg:pt-36">
+      <Link to="/" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--accent)] mb-8">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M19 12H5M11 18l-6-6 6-6" />
+        </svg>
+        На главную
+      </Link>
       <div className="eyebrow mb-5">Правовая информация</div>
       <h1 className="heading text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
         Политика конфиденциальности

@@ -254,7 +254,7 @@ export function LandingPage() {
 
   const [device, setDevice] = useState("Смартфон");
   const [repair, setRepair] = useState("Экран");
-  const [openFaq, setOpenFaq] = useState(0);
+  const [openFaq, setOpenFaq] = useState(-1);
   const [modal, setModal] = useState<{ open: boolean; mode: RequestMode; service: string | null }>({
     open: false,
     mode: "call",
