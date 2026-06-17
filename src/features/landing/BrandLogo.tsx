@@ -60,7 +60,7 @@ export function BrandLockup({ className }: MarkProps) {
           className="h-6 w-auto select-none sm:h-7"
         />
         {isAndroid && (
-          <span className="mt-0.5 block text-[0.5rem] font-medium uppercase tracking-[0.15em] text-slate-400 md:hidden">
+          <span className="mt-0.5 block text-center text-[0.5rem] font-medium uppercase tracking-[0.15em] text-slate-400 md:hidden">
             mobile service
           </span>
         )}
