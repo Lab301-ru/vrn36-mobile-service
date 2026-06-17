@@ -32,7 +32,7 @@ export function BlogCarousel() {
 
   return (
     <section id="news" className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8 lg:py-32">
-      <div className="reveal flex flex-col justify-between gap-6 md:flex-row md:items-end">
+      <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div>
           <div className="eyebrow mb-5">Новости и советы</div>
           <h2 className="heading max-w-3xl text-balance text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
@@ -56,7 +56,7 @@ export function BlogCarousel() {
         </div>
       </div>
 
-      <div ref={trackRef} className="carousel-track reveal mt-12">
+      <div ref={trackRef} className="carousel-track mt-12">
         {posts.map((post) => (
           <article key={post.id} data-card className="carousel-card card card-interactive flex flex-col overflow-hidden p-0">
             {post.coverUrl && (

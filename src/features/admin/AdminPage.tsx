@@ -25,7 +25,7 @@ const empty: PostInput = {
 };
 
 function LoginForm() {
-  const [email, setEmail] = useState("");
+  const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -35,9 +35,11 @@ function LoginForm() {
     if (!supabase) return;
     setBusy(true);
     setError("");
+    const value = login.trim();
+    const email = value.includes("@") ? value : `${value}@vrn36.ru`;
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
-    if (error) setError("Неверный email или пароль");
+    if (error) setError("Неверный логин или пароль");
   };
 
   return (
@@ -48,7 +50,7 @@ function LoginForm() {
       <h1 className="mt-6 text-2xl font-semibold text-white">Вход в админку</h1>
       <p className="mt-2 text-sm text-slate-400">Управление блогом VRN-36.</p>
       <form className="mt-6 grid gap-3" onSubmit={submit}>
-        <input className="input" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input className="input" type="text" placeholder="Логин" value={login} onChange={(e) => setLogin(e.target.value)} required autoCapitalize="none" autoCorrect="off" />
         <input className="input" type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} required />
         {error && <p className="text-sm text-red-400">{error}</p>}
         <button type="submit" className="btn btn-primary btn-lg w-full" disabled={busy}>
