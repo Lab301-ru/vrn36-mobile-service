@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 type MarkProps = { className?: string };
 
 /** VRN-36 logomark — engineered hexagon with a charged "V" vector (Quiet Voltage). */
@@ -37,16 +39,32 @@ export function LogoMark({ className }: MarkProps) {
 
 /** Full horizontal lockup: the VRN-36 wordmark + "mobile service" tagline. */
 export function BrandLockup({ className }: MarkProps) {
+  const [isAndroid, setIsAndroid] = useState(false);
+
+  useEffect(() => {
+    const ua = navigator.userAgent.toLowerCase();
+    if (ua.includes("android")) {
+      setIsAndroid(true);
+    }
+  }, []);
+
   return (
     <span className={`inline-flex items-center gap-1.5 sm:gap-2.5 ${className ?? ""}`}>
-      <img
-        src="/vrn36-horizontal-white.png"
-        alt="VRN-36 Mobile Service"
-        width={4287}
-        height={918}
-        draggable={false}
-        className="h-6 w-auto select-none sm:h-7"
-      />
+      <span className="flex flex-col">
+        <img
+          src="/vrn36-horizontal-white.png"
+          alt="VRN-36 Mobile Service"
+          width={4287}
+          height={918}
+          draggable={false}
+          className="h-6 w-auto select-none sm:h-7"
+        />
+        {isAndroid && (
+          <span className="mt-0.5 block text-[0.5rem] font-medium uppercase tracking-[0.15em] text-slate-400 xs:hidden">
+            mobile service
+          </span>
+        )}
+      </span>
       <span
         aria-hidden="true"
         className="hidden flex-col border-l border-white/15 pl-2.5 text-[0.58rem] font-medium uppercase leading-[1.25] tracking-[0.2em] text-slate-400 xs:flex"
