@@ -34,12 +34,36 @@ scripts/generate-sitemap.ts # генерация sitemap из posts.ts + site.ts
 public/                    # статика: иконки, og-image, robots.txt, sitemap.xml, фото
 ```
 
-## Деплой на Vercel
+## Деплой на GitHub Pages
 
-1. Запушить репозиторий на GitHub.
-2. В Vercel «Import Project» — фреймворк определится как **Vite** автоматически.
-   - Build Command: `npm run build`
-   - Output Directory: `dist`
-3. `vercel.json` уже содержит SPA-rewrite на `index.html` — прямые переходы и обновление страниц `/blog/*` работают без 404.
+Сайт собирается и публикуется напрямую из GitHub Actions
+([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)) — без внешних
+платформ. Это основной способ деплоя (Vercel часто недоступен у российских
+провайдеров).
 
-При смене домена обновить `url` в [`src/config/site.ts`](src/config/site.ts) (используется в canonical, sitemap и JSON-LD).
+Workflow на каждый push в `main`:
+
+1. ставит зависимости через `pnpm install --frozen-lockfile`;
+2. собирает прод-сборку `pnpm build` (prebuild генерирует `sitemap.xml`);
+3. копирует `index.html` → `404.html` — SPA-fallback, чтобы прямые переходы
+   на `/blog/*` отдавали приложение (у GitHub Pages нет rewrite, как в Vercel);
+4. публикует `dist/` на GitHub Pages.
+
+### Первичная настройка (один раз)
+
+1. **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+2. **Settings → Secrets and variables → Actions** — добавить секреты сборки:
+   - `VITE_SUPABASE_URL` = `https://ucsiomzdbyjddqslhibi.supabase.co`
+   - `VITE_SUPABASE_ANON_KEY` = anon-ключ проекта Supabase.
+
+   Без секретов сборка не падает: блог и sitemap соберутся без статей.
+3. **Кастомный домен `vrn36mobileservice.ru`**: файл [`public/CNAME`](public/CNAME)
+   уже задаёт домен. В DNS-регистраторе перенаправить записи с Vercel на GitHub Pages:
+   - `A`-записи apex-домена на `185.199.108.153`, `185.199.109.153`,
+     `185.199.110.153`, `185.199.111.153`;
+   - `CNAME` для `www` → `<username>.github.io`.
+
+   После проверки домена включить **Enforce HTTPS** в Settings → Pages.
+
+При смене домена обновить `url` в [`src/config/site.ts`](src/config/site.ts)
+(используется в canonical, sitemap и JSON-LD) и содержимое `public/CNAME`.
