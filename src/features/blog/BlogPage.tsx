@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDocumentMeta } from "@/hooks/useDocumentMeta";
-import { fetchPublishedPosts, formatDate, type Post } from "./api";
+import { fetchPublishedPosts, formatDate, type Post } from "./public-api";
 
 export function BlogPage() {
   useDocumentMeta({

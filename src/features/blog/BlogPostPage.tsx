@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 import { site } from "@/config/site";
-import { fetchPostBySlug, formatDate, parseBody, type Block, type Post } from "./api";
+import { fetchPostBySlug, formatDate, parseBody, type Block, type Post } from "./public-api";
 
 function BlockView({ block }: { block: Block }) {
   if (block.type === "h2") {

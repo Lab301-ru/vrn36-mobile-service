@@ -314,6 +314,50 @@ body {
   transform: none;
 }
 
+/* ---- Animations for Modals and Expandables (replacing framer-motion) ---- */
+.modal-overlay-css {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+.modal-overlay-css.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+.modal-panel-css {
+  width: 100%;
+  max-width: 28rem;
+  transform: translateY(24px) scale(0.97);
+  opacity: 0;
+  transition: transform 0.3s var(--ease-out), opacity 0.3s ease;
+}
+.modal-overlay-css.is-open .modal-panel-css {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.expandable-css {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.4s var(--ease-out), opacity 0.4s ease;
+}
+.expandable-css.is-expanded {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.expandable-content-css {
+  overflow: hidden;
+}
+
 /* =========================================================================
    Navigation
    ========================================================================= */

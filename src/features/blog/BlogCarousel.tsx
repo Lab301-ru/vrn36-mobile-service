@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchPublishedPosts, formatDate, type Post } from "./api";
+import { fetchPublishedPosts, formatDate, type Post } from "./public-api";
 
 function Arrow({ dir }: { dir: "left" | "right" }) {
   return (

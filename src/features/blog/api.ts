@@ -1,17 +1,7 @@
 import { supabase } from "@/lib/supabase";
+import { type Post, formatDate, parseBody, type Block } from "./public-api";
 
-export type Post = {
-  id: string;
-  slug: string;
-  title: string;
-  description: string;
-  body: string;
-  category: string;
-  coverUrl: string | null;
-  readingMinutes: number;
-  published: boolean;
-  createdAt: string;
-};
+export { type Post, formatDate, parseBody, type Block };
 
 export type PostInput = {
   id?: string;
@@ -54,31 +44,6 @@ function toPost(r: Row): Post {
 }
 
 const COLUMNS = "id, slug, title, description, body, category, cover_url, reading_minutes, published, created_at";
-
-/** Опубликованные посты для публичной части (свежие сверху). */
-export async function fetchPublishedPosts(): Promise<Post[]> {
-  if (!supabase) return [];
-  const { data, error } = await supabase
-    .from("posts")
-    .select(COLUMNS)
-    .eq("published", true)
-    .order("created_at", { ascending: false });
-  if (error) throw error;
-  return (data as Row[]).map(toPost);
-}
-
-/** Один опубликованный пост по slug. */
-export async function fetchPostBySlug(slug: string): Promise<Post | null> {
-  if (!supabase) return null;
-  const { data, error } = await supabase
-    .from("posts")
-    .select(COLUMNS)
-    .eq("slug", slug)
-    .eq("published", true)
-    .maybeSingle();
-  if (error) throw error;
-  return data ? toPost(data as Row) : null;
-}
 
 /** Все посты (для админки, требует авторизации). */
 export async function fetchAllPosts(): Promise<Post[]> {
@@ -146,11 +111,6 @@ export async function uploadCover(file: File): Promise<string> {
   return supabase.storage.from("blog-covers").getPublicUrl(path).data.publicUrl;
 }
 
-const dateFormatter = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", year: "numeric" });
-export function formatDate(iso: string): string {
-  return dateFormatter.format(new Date(iso));
-}
-
 /** Транслитерация заголовка в slug. */
 export function slugify(title: string): string {
   const map: Record<string, string> = {
@@ -166,36 +126,4 @@ export function slugify(title: string): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 80);
-}
-
-export type Block = { type: "p" | "h2"; text: string } | { type: "list"; items: string[] };
-
-/** Парсер тела (markdown-lite): "## " — заголовок, "- " — пункт списка, пустая строка — абзац. */
-export function parseBody(body: string): Block[] {
-  const blocks: Block[] = [];
-  let list: string[] = [];
-  const flushList = () => {
-    if (list.length) {
-      blocks.push({ type: "list", items: list });
-      list = [];
-    }
-  };
-  for (const raw of body.split(/\r?\n/)) {
-    const line = raw.trim();
-    if (!line) {
-      flushList();
-      continue;
-    }
-    if (line.startsWith("## ")) {
-      flushList();
-      blocks.push({ type: "h2", text: line.slice(3).trim() });
-    } else if (line.startsWith("- ")) {
-      list.push(line.slice(2).trim());
-    } else {
-      flushList();
-      blocks.push({ type: "p", text: line });
-    }
-  }
-  flushList();
-  return blocks;
 }
