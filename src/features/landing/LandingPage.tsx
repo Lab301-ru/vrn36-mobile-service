@@ -589,14 +589,14 @@ export function LandingPage() {
               <a className="btn btn-primary btn-lg w-full" href={phoneHref}>
                 Позвонить сейчас · {phone}
               </a>
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 <a className="btn btn-secondary btn-md" href={telegramHref} target="_blank" rel="noreferrer">
                   Telegram
                 </a>
                 <a className="btn btn-secondary btn-md" href={whatsappHref} target="_blank" rel="noreferrer">
                   WhatsApp
                 </a>
-                <a className="btn btn-secondary btn-md" href={vkHref} target="_blank" rel="noreferrer">
+                <a className="btn btn-secondary btn-md col-span-2 sm:col-span-1" href={vkHref} target="_blank" rel="noreferrer">
                   VK
                 </a>
               </div>
