@@ -38,7 +38,7 @@ export function LogoMark({ className }: MarkProps) {
 /** Full horizontal lockup: the VRN-36 wordmark + "mobile service" tagline. */
 export function BrandLockup({ className }: MarkProps) {
   return (
-    <span className={`inline-flex items-center gap-2.5 ${className ?? ""}`}>
+    <span className={`inline-flex items-center gap-1.5 sm:gap-2.5 ${className ?? ""}`}>
       <img
         src="/vrn36-horizontal-white.png"
         alt="VRN-36 Mobile Service"
@@ -49,7 +49,7 @@ export function BrandLockup({ className }: MarkProps) {
       />
       <span
         aria-hidden="true"
-        className="flex flex-col border-l border-white/15 pl-2.5 text-[0.58rem] font-medium uppercase leading-[1.25] tracking-[0.2em] text-slate-400"
+        className="hidden flex-col border-l border-white/15 pl-2.5 text-[0.58rem] font-medium uppercase leading-[1.25] tracking-[0.2em] text-slate-400 xs:flex"
       >
         <span>mobile</span>
         <span>service</span>
