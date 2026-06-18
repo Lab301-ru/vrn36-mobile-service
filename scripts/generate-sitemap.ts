@@ -25,9 +25,13 @@ function readEnv(name: string): string | undefined {
   return line?.slice(name.length + 1).trim();
 }
 
+/** Публичные параметры проекта блога (vrn36-blog) — те же, что в src/lib/supabase.ts. */
+const FALLBACK_URL = "https://zuaafghnfjztjzdnpwdu.supabase.co";
+const FALLBACK_ANON_KEY = "sb_publishable_qA6NQ8nZbSPXYTo-W9nL-g_LgbZpXlP";
+
 async function fetchPostEntries(): Promise<Entry[]> {
-  const url = readEnv("VITE_SUPABASE_URL");
-  const key = readEnv("VITE_SUPABASE_ANON_KEY");
+  const url = readEnv("VITE_SUPABASE_URL") || FALLBACK_URL;
+  const key = readEnv("VITE_SUPABASE_ANON_KEY") || FALLBACK_ANON_KEY;
   if (!url || !key) return [];
   try {
     const supabase = createClient(url, key);
