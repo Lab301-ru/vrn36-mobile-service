@@ -27,7 +27,8 @@ function readEnv(name: string): string | undefined {
 
 /** Публичные параметры проекта блога (vrn36-blog) — те же, что в src/lib/supabase.ts. */
 const FALLBACK_URL = "https://zuaafghnfjztjzdnpwdu.supabase.co";
-const FALLBACK_ANON_KEY = "sb_publishable_qA6NQ8nZbSPXYTo-W9nL-g_LgbZpXlP";
+const FALLBACK_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1YWFmZ2huZmp6dGp6ZG5wd2R1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2ODc4NDUsImV4cCI6MjA5NzI2Mzg0NX0.NdG17XkUmkT0Dyc2my1pX6ZtFvno9rjuekYJHoYi0QU";
 
 async function fetchPostEntries(): Promise<Entry[]> {
   const url = readEnv("VITE_SUPABASE_URL") || FALLBACK_URL;
