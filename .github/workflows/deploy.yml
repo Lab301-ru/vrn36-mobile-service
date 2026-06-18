@@ -37,11 +37,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        env:
-          # Ключи Supabase читаются на этапе сборки (блог, sitemap, админка).
-          # Заданы в Settings → Secrets and variables → Actions.
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        # Параметры Supabase (проект блога) вшиты как значения по умолчанию
+        # в src/lib/supabase.ts и scripts/generate-sitemap.ts — это публичные
+        # URL и publishable-ключ, доступ к данным ограничивает RLS. Поэтому
+        # секреты сборке не нужны.
         run: pnpm build
 
       - name: SPA fallback for client-side routing
