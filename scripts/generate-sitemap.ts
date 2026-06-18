@@ -34,20 +34,24 @@ async function fetchPostEntries(): Promise<Entry[]> {
   const url = readEnv("VITE_SUPABASE_URL") || FALLBACK_URL;
   const key = readEnv("VITE_SUPABASE_ANON_KEY") || FALLBACK_ANON_KEY;
   if (!url || !key) return [];
+  console.log(`[sitemap] supabase host: ${url.replace(/^https?:\/\//, "").split(".")[0]}`);
   try {
     const supabase = createClient(url, key);
     const { data, error } = await supabase
       .from("posts")
       .select("slug, created_at")
       .eq("published", true);
+    if (error) console.error("[sitemap] supabase error:", JSON.stringify(error));
     if (error || !data) return [];
+    console.log(`[sitemap] fetched posts: ${data.length}`);
     return data.map((p) => ({
       path: `/blog/${p.slug}`,
       lastmod: String(p.created_at).slice(0, 10),
       changefreq: "monthly",
       priority: "0.6",
     }));
-  } catch {
+  } catch (e) {
+    console.error("[sitemap] fetch threw:", e instanceof Error ? e.message : String(e));
     return [];
   }
 }
