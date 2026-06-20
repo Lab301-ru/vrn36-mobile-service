@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { SiteLayout } from "@/components/SiteLayout";
 import { ScrollManager } from "@/components/ScrollManager";
 import { LandingPage } from "@/features/landing/LandingPage";
+import { NotFoundPage } from "@/features/not-found/NotFoundPage";
 
 // Маршруты вне главной грузятся лениво — меньше вес первой загрузки.
 const BlogPage = lazy(() => import("@/features/blog/BlogPage").then((m) => ({ default: m.BlogPage })));
@@ -25,6 +26,7 @@ export function App() {
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:slug" element={<BlogPostPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
           <Route path="/admin" element={<AdminPage />} />
         </Routes>
