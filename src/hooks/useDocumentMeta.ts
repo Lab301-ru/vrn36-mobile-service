@@ -6,6 +6,8 @@ type DocumentMeta = {
   description?: string;
   /** Путь без домена, например "/blog". По умолчанию текущий путь. */
   path?: string;
+  /** Значение meta robots. По умолчанию "index, follow" (как в index.html). */
+  robots?: string;
 };
 
 function upsertMeta(selector: string, attr: "name" | "property", key: string, content: string) {
@@ -32,11 +34,15 @@ function upsertCanonical(href: string) {
  * Обновляет title, description, canonical и OG-теги для конкретной страницы.
  * Нужно для SPA: без этого все маршруты делят мета-теги из index.html.
  */
-export function useDocumentMeta({ title, description, path }: DocumentMeta) {
+export function useDocumentMeta({ title, description, path, robots }: DocumentMeta) {
   useEffect(() => {
     document.title = title;
     const canonicalPath = path ?? window.location.pathname;
     const canonicalUrl = `${site.url}${canonicalPath}`;
+
+    // Каждая страница задаёт robots явно: служебные (404) — noindex,
+    // остальные возвращают значение по умолчанию при переходе с них.
+    upsertMeta('meta[name="robots"]', "name", "robots", robots ?? "index, follow");
 
     if (description) {
       upsertMeta('meta[name="description"]', "name", "description", description);
